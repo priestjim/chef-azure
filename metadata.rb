@@ -8,8 +8,10 @@ version          IO.read(File.join(File.dirname(__FILE__), 'VERSION')).chomp res
 
 recipe 'azure', 'Installs and configures Windows Azure support for Linux VMs and provides an OHAI plugin'
 
-%w{ ubuntu debian centos redhat amazon scientific oracle fedora }.each do |os|
-  supports os
-end
+supports 'ubuntu',      '>= 12.04'
+supports 'debian',      '>= 6.0'
+supports 'redhat',      '>= 6.0'
+supports 'scientific',  '>= 6.0'
+supports 'oracle',      '>= 6.0'
 
 depends 'ohai', '>= 1.1.4'
