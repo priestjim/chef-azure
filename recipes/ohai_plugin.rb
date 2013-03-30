@@ -22,12 +22,15 @@ ohai 'reload_azure' do
   plugin 'azure'
 end
 
-cookbook_file "#{node['ohai']['plugin_path']}/azure.rb" do
+aco = cookbook_file "#{node['ohai']['plugin_path']}/azure.rb" do
   source 'azure.rb'
   owner 'root'
   group 'root'
   mode 00755
+  action :nothing
   notifies :reload, 'ohai[reload_azure]', :immediately
 end
+
+aco.run_action(:create)
 
 include_recipe 'ohai'
