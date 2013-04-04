@@ -22,6 +22,12 @@ ohai 'reload_azure' do
   plugin 'azure'
 end
 
+directory node['ohai']['plugin_path'] do
+  owner 'root'
+  group 'root'
+  mode 00755
+end.run_action(:create)
+
 cookbook_file "#{node['ohai']['plugin_path']}/azure.rb" do
   source 'azure.rb'
   owner 'root'
