@@ -17,6 +17,12 @@
 # limitations under the License.
 #
 
+# Include the OHAI plugin in order to make the Azure attributes available to the rest of the recipe
+include_recipe 'azure::ohai_plugin'
+
+# Avoid execution of the rest of the recipe unless we are running on the Azure platform
+return true unless node.attribute?('azure')
+
 case node['platform_family']
 when 'rhel', 'amazon', 'scientific', 'oracle', 'fedora'
 
@@ -62,5 +68,3 @@ service 'walinuxagent' do
   provider(Chef::Provider::Service::Upstart) if (platform?('ubuntu') && node['platform_version'].to_f >= 12.04)
   action [ :enable, :start ]
 end
-
-include_recipe 'azure::ohai_plugin'
