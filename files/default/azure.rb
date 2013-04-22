@@ -147,7 +147,7 @@ if looks_like_azure?
   azure[:resource_disk]     = retrieve_waagent_data.fetch(:resource_disk)
 
   cloud[:public_ips]        = [ azure[:public_ipv4] ]
-  cloud[:private_ips]       = [ azure[:private_ipv4] ]
+  cloud[:private_ips]       = [ azure[:local_ipv4] ]
 
   cloud[:public_ipv4]       = azure[:public_ipv4]
   cloud[:local_ipv4]        = azure[:local_ipv4]
