@@ -12,9 +12,7 @@ on https://github.com/windows-azure/walinuxagent.
 Please note that the OHAI plugin currently supports in-VM only discovery of 
 attributes. That means that external attributes like the VM name, Affinity Groups
 and the such are not available, since they need to be discovered via API calls
-to the Windows Azure endpoints. In addition, the OHAI plugin does not currently
-support custom DNS configurations (that can be configured via the Virtual 
-Networks interface on the Windows Azure portal).
+to the Windows Azure endpoints.
 
 Requirements
 ============
@@ -27,7 +25,7 @@ This cookbook depends on the `ohai` cookbook for the `azure::ohai_plugin` recipe
 Platform
 --------
 
-The following platforms are supported and tested under test kitchen:
+The following platforms are supported and tested:
 
 * Ubuntu 12.04, 12.10
 * CentOS 6
@@ -87,6 +85,7 @@ attributes via OHAI:
 
 * `node['azure']['deployment_id']` - The Azure deployment ID
 * `node['azure']['instance_type']` - The name of the running instance type, i.e. Extra Large
+* `node['azure']['instance_code']` - The code of the running instance type, i.e. A6
 
 * `node['azure']['public_hostname']` - The public hostname by which your VM is accessible
 * `node['azure']['public_ipv4']` - The public IP by which your VM is accessible

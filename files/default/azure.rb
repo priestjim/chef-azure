@@ -23,9 +23,16 @@ require_plugin 'hostname'
 require_plugin 'network'
 
 # Infer the instance type from the memory available
+def instance_memory
+  memory[:total].to_i / 1024
+end
+
 def retrieve_instance_type
-  instance_memory = (memory[:total].to_i / 1024)
-  instance_type = if instance_memory >= 8192
+  instance_type = if instance_memory >= 32768
+    'A7'
+  elsif instance_memory >= 16384
+    'A6'
+  elsif instance_memory >= 8192
     'Extra Large'
   elsif instance_memory >= 4096
     'Large'
@@ -41,8 +48,29 @@ def retrieve_instance_type
   instance_type
 end
 
+# Infer the instance code again from the memory available
+def retrieve_instance_code
+  instance_code = if instance_memory >= 32768
+    'A7'
+  elsif instance_memory >= 16384
+    'A6'
+  elsif instance_memory >= 8192
+    'A4'
+  elsif instance_memory >= 4096
+    'A3'
+  elsif instance_memory >= 2048
+    'A2'
+  elsif instance_memory >= 1024
+    'A1'
+  elsif instance_memory >= 512
+    'A0'
+  else
+    'Unknown'
+  end
+  instance_code
+end
+
 # Extract information from resolv.conf
-# TODO: Fix this so it supports custom DNS declared on virtual networks
 def retrieve_resolv_data
   resolv_data = ::File.read(::File.expand_path(::File.join('etc', 'resolv.conf'),'/')).
     split("\n").
@@ -134,6 +162,7 @@ if looks_like_azure?
 
   azure[:deployment_id]     = resolv_data[:deployment_id]
   azure[:instance_type]     = retrieve_instance_type
+  azure[:instance_code]     = retrieve_instance_code
   
   azure[:public_hostname]   = resolv_data[:public_hostname]
   azure[:public_ipv4]       = public_ipv4

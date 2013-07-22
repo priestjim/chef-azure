@@ -17,9 +17,8 @@
 # limitations under the License.
 #
 
-ohai 'reload_azure' do
+ohai 'reload ohai for azure' do
   action :nothing
-  plugin 'azure'
 end
 
 directory node['ohai']['plugin_path'] do
@@ -34,7 +33,7 @@ cookbook_file "#{node['ohai']['plugin_path']}/azure.rb" do
   group 'root'
   mode 00755
   action :nothing
-  notifies :reload, 'ohai[reload_azure]', :immediately
+  notifies :reload, 'ohai[reload ohai for azure]', :immediately
 end.run_action(:create)
 
 include_recipe 'ohai'
