@@ -107,9 +107,9 @@ def retrieve_waagent_data
     {
       :resource_disk => {
         :size       => {
-          :kb       => (filesystem[:block_device][:sdb][:size].to_i * 512) / 1024,
-          :mb       => (filesystem[:block_device][:sdb][:size].to_i * 512) / 1048576,
-          :gb       => (filesystem[:block_device][:sdb][:size].to_i * 512) / 1073741824
+          :kb       => (block_device[:sdb][:size].to_i * 512) / 1024,
+          :mb       => (block_device[:sdb][:size].to_i * 512) / 1048576,
+          :gb       => (block_device[:sdb][:size].to_i * 512) / 1073741824
         },
         :device     => '/dev/sdb1',
         :mount      => waagent_hash['ResourceDisk.Format'].eql?('y'),
