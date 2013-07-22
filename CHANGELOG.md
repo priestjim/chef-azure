@@ -1,3 +1,7 @@
+## 0.1.2:
+
+* Added resource disk information
+
 ## 0.1.1:
 
 * Added platform check

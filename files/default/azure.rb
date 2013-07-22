@@ -88,28 +88,40 @@ def retrieve_resolv_data
 end
 
 def retrieve_waagent_data
-  # Parse the waagent.conf file in order to retrieve resource disk info
-  waagent_hash = {}
-  ::File.read(::File.join('etc', 'waagent.conf')).
-    split("\n").
-    map{ |line| if line.match(/^\s*#/) || line.strip.empty? then next else line end }.
-    compact.
-    map{ |line| line.split.first }.
-    each{ |line| kv = line.split('='); waagent_hash[kv.shift] = kv.shift } || nil rescue nil
-  return nil if ((! waagent_hash) || (waagent_hash.empty?))
-  # The resource disk is always mounted on /dev/sdb1, IF mounted
-  {
-    :resource_disk => {
-      :device     => '/dev/sdb1',
-      :mount      => waagent_hash['ResourceDisk.Format'].eql?('y'),
-      :filesystem => waagent_hash['ResourceDisk.Filesystem'],
-      :mountpoint => waagent_hash['ResourceDisk.MountPoint'],
-      :swap       => {
-        :enabled    => waagent_hash['ResourceDisk.EnableSwap'].eql?('y'),
-        :size       => waagent_hash['ResourceDisk.SwapSizeMB'].to_i
-      }      
+  if retrieve_instance_code.eql?('A0')
+    # No resource disk for XS instances
+    {
+      :resource_disk => false
     }
-  }
+  else
+    # Parse the waagent.conf file in order to retrieve resource disk info
+    waagent_hash = {}
+    ::File.read(::File.join('etc', 'waagent.conf')).
+      split("\n").
+      map{ |line| if line.match(/^\s*#/) || line.strip.empty? then next else line end }.
+      compact.
+      map{ |line| line.split.first }.
+      each{ |line| kv = line.split('='); waagent_hash[kv.shift] = kv.shift } || nil rescue nil
+    return nil if ((! waagent_hash) || (waagent_hash.empty?))
+    # The resource disk is always mounted on /dev/sdb1, IF mounted
+    {
+      :resource_disk => {
+        :size       => {
+          :kb       => (filesystem[:block_device][:sdb][:size].to_i * 512) / 1024,
+          :mb       => (filesystem[:block_device][:sdb][:size].to_i * 512) / 1048576,
+          :gb       => (filesystem[:block_device][:sdb][:size].to_i * 512) / 1073741824
+        },
+        :device     => '/dev/sdb1',
+        :mount      => waagent_hash['ResourceDisk.Format'].eql?('y'),
+        :filesystem => waagent_hash['ResourceDisk.Filesystem'],
+        :mountpoint => waagent_hash['ResourceDisk.MountPoint'],
+        :swap       => {
+          :enabled    => waagent_hash['ResourceDisk.EnableSwap'].eql?('y'),
+          :size       => waagent_hash['ResourceDisk.SwapSizeMB'].to_i
+        }
+      }
+    }
+  end
 end
 
 # Use the local resolver to resolve the hostname inferred from the search directive on resolv.conf
