@@ -22,7 +22,7 @@ include_recipe 'azure::ohai_plugin'
 
 # Avoid execution of the rest of the recipe unless we are running on the Azure platform
 unless node.attribute?('cloud') && node['cloud'].attribute?('provider') && node['cloud']['provider'].eql?('azure')
-  Chef::Log('Azure cookbook included in run list but not currently running on Windows Azure platform. Skipping recipe...')
+  Chef::Log.info('Azure cookbook included in run list but not currently running on Windows Azure platform. Skipping recipe...')
   return true 
 end
 
