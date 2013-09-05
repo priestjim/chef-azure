@@ -25,9 +25,15 @@ directory node['ohai']['plugin_path'] do
   owner 'root'
   group 'root'
   mode 00755
+  action :nothing
 end.run_action(:create)
 
-cookbook_file "#{node['ohai']['plugin_path']}/azure.rb" do
+file "#{node['ohai']['plugin_path']}/azure.rb" do
+  action :nothing
+  only_if { node['azure']['ohai']['cleanup_old_versions'] }
+end.run_action(:delete)
+
+cookbook_file "#{node['ohai']['plugin_path']}/azure_custom.rb" do
   source 'azure.rb'
   owner 'root'
   group 'root'

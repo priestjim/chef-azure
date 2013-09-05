@@ -21,6 +21,10 @@
 default['azure']['rpm']['url']                          = nil
 default['azure']['rpm']['checksum']                     = nil
 
+# For the OHAI plugin
+default['azure']['ohai']['override_embedded']           = true
+default['azure']['ohai']['cleanup_old_versions']        = true
+
 # Agent configuration - y enables, n disables (apparently :))
 default['azure']['agent']['provisioning']               = 'y'
 default['azure']['agent']['delete_root_password']       = 'y'

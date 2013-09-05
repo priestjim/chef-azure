@@ -1,3 +1,9 @@
+## 0.2.0:
+
+* Made the OHAI plugin installation optional
+* Changed the name of the OHAI plugin to azure_custom.rb
+* Enabled cleanup of older plugin revisions
+
 ## 0.1.2:
 
 * Added resource disk information

@@ -47,6 +47,10 @@ want disabled and `y` for features that you want enabled.
   virtual machines.
 * `node['azure']['rpm']['checksum']` - The SHA-256 checksum of the above RPM.
 
+* `node['azure']['ohai']['override_embedded']` - Installs the custom OHAI plugin and overrides the one that ships with Chef
+* `node['azure']['ohai']['cleanup_old_versions']` - Removes the older custom azure.rb OHAI plugin, since that is again overriden by the
+  one shipped with Chef.
+
 * `node['azure']['agent']['provisioning']` - Enables the provisioning code of the Lnux agent.
 * `node['azure']['agent']['delete_root_password']` - If provisioning is enabled, disables the root password of the system.
 * `node['azure']['agent']['regenerate_ssh_key']` - Recreates the root user SSH private key in the provisioning phase.
@@ -73,15 +77,14 @@ configures the `waagent.conf` file that enables various services on the virtual 
 
 ## ohai_plugin.rb
 
-The OHAI plugin recipe installs the Azure OHAI plugin and reloads OHAI in order to 
+The OHAI plugin recipe installs a custom Azure OHAI plugin and reloads OHAI in order to
 populate the `azure` and `cloud` mashes.
 
 OHAI Plugin
 ===========
 
-The `ohai_plugin` recipe includes an OHAI plugin. It will be
-automatically installed and activated, providing the following
-attributes via OHAI:
+The `ohai_plugin` recipe includes a custom OHAI plugin that overrides the one shipped with Chef which
+only supports bootstrap hints. It provides the following attributes via OHAI:
 
 * `node['azure']['deployment_id']` - The Azure deployment ID
 * `node['azure']['instance_type']` - The name of the running instance type, i.e. Extra Large

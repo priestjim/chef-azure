@@ -18,7 +18,9 @@
 #
 
 # Include the OHAI plugin in order to make the Azure attributes available to the rest of the recipe
-include_recipe 'azure::ohai_plugin'
+if node['azure']['ohai']['override_embedded']
+  include_recipe 'azure::ohai_plugin'
+end
 
 # Avoid execution of the rest of the recipe unless we are running on the Azure platform
 unless node.attribute?('cloud') && node['cloud'].attribute?('provider') && node['cloud']['provider'].eql?('azure')
