@@ -1,3 +1,7 @@
+## 0.2.1:
+
+* Updated the plugin to conform to newer resolv.conf formats
+
 ## 0.2.0:
 
 * Made the OHAI plugin installation optional

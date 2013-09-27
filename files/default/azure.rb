@@ -79,12 +79,24 @@ def retrieve_resolv_data
     split.
     fetch(1).
     split('.') || nil rescue nil
-  return nil if ((! resolv_data) || (! resolv_data[0]) || (! resolv_data[1]) || (! resolv_data[3]))
-  {
-    :deployment_id => resolv_data[0],
-    :public_hostname => "#{resolv_data[1]}.cloudapp.net",
-    :location => resolv_data[3]
-  }
+
+    if resolv_data && resolv_data.size > 5
+      return nil if ((! resolv_data) || (! resolv_data[0]) || (! resolv_data[1]) || (! resolv_data[3]))
+      {
+        :deployment_id => resolv_data[0],
+        :public_hostname => "#{resolv_data[1]}.cloudapp.net",
+        :location => resolv_data[3]
+      }
+    elsif resolv_data
+      return nil if ((! resolv_data) || (! resolv_data[0]) || (! resolv_data[1]))
+      {
+        :deployment_id => 'unknown',
+        :public_hostname => "#{resolv_data[0]}.cloudapp.net",
+        :location => decode_location(resolv_data[1])
+      }
+    else
+      nil
+    end
 end
 
 def retrieve_waagent_data
@@ -139,6 +151,19 @@ def retrieve_public_ipv4(public_hostname)
   resolver.getaddress(public_hostname).to_s
 rescue
   nil
+end
+
+def decode_location(location)
+  location_hash = {
+    :f  => 'europenorth',
+    :a  => 'europewest',
+    :h  => 'asiaeast',
+    :b  => 'useast',
+    :d  => 'uswest',
+    :i  => 'asiasoutheast'
+  }
+  real_location = location[0]
+  location_hash[real_location.to_sym] || 'unknown'
 end
 
 def prettify_location(location)
